@@ -13,7 +13,7 @@ func valid(a int, b int, c int) bool {
 
 func main() {
     start := time.Now() //timestamp
-	fmt.Printf("Solution for day 18 GO !\n")
+	fmt.Printf("Solution for day 3 GO !\n")
 
     var valid_triangle = 0
     var valid_triangle_day2 = 0
