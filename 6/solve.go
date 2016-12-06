@@ -18,31 +18,20 @@ func main() {
     file, _ := ioutil.ReadFile("input.txt")
     data := strings.Split(string(file), "\n")
 
-    lenght := len(data[0])
-
-    for i:=0; i < lenght; i++ {
+    for i:=0; i < len(data[0]); i++ {
         m = make(map[rune]int)
         for _, s := range data { //loop over lines
-            for j, c := range s { //loop over line to find rune
-                if j == i {
-                 m[c]++
-                 break
-                }
+            for j, c := range s {
+                if j == i { m[c]++; break }
             }
         }
-        //Find the most and he least rune in eac position
-        var keepMax, keepMin rune
+        //Find the most and he least rune in each position
         var lastKeyMax = 0
         var lastKeyMin = 10000
+        var keepMin, keepMax rune
         for k, v := range m { 
-            if v > lastKeyMax {
-                keepMax = k
-                lastKeyMax = v
-            }
-            if v < lastKeyMin {
-                keepMin = k
-                lastKeyMin = v
-            }
+            if v > lastKeyMax { keepMax = k; lastKeyMax = v }
+            if v < lastKeyMin { keepMin = k; lastKeyMin = v }
         }
         passwordMax += string(keepMax)
         passwordMin += string(keepMin)
