@@ -3,84 +3,53 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"strconv"
 	"strings"
 	"time"
 )
+
+func processMarker(data string, day2 bool) int {
+	var (
+		markerZone = false
+		fileLen    = 0
+		numOfChar  = 0
+		numOfIter  = 0
+		marker     = ""
+	)
+	for i := 0; i < len(data); i++ {
+		if string(data[i]) == "(" {
+			markerZone = true
+		} else if string(data[i]) == ")" {
+			markerZone = false
+			fmt.Sscanf(marker, "%dx%d", &numOfChar, &numOfIter)
+			if day2 {
+				fileLen += numOfIter * processMarker(data[i+1:i+numOfChar+1], day2)
+			} else {
+				fileLen += numOfChar * numOfIter
+			}
+			i += numOfChar
+			marker = ""
+		} else if markerZone {
+			marker += string(data[i])
+		} else {
+			fileLen++
+		}
+	}
+
+	return fileLen
+}
 
 func main() {
 	start := time.Now() //timestamp
 	fmt.Printf("Solution for day 8 GO !\n")
 
-	var (
-		state          = "normal"
-		decompressData = ""
-		marker         = ""
-		buffer         = ""
-		iter           int
-		numOfChar      int
-	)
-
 	//Read file
 	file, _ := ioutil.ReadFile("input.txt")
 	data := strings.Split(string(file), "\n")
 	data[0] = strings.Replace(data[0], " ", "", -1)
+	compressData := data[0][:]
 
-	for _, char := range data[0] {
-		switch state {
-		case "normal":
-			buffer = ""
-			numOfChar = 0
-			iter = 0
-			if char == '(' {
-				state = "newMarker"
-			} else {
-				decompressData += string(char)
-			}
-
-		case "newMarker":
-			if char == ')' {
-				state = "DecompressStart"
-			} else {
-				marker += string(char)
-			}
-
-		case "DecompressStart":
-			splitted := strings.Split(marker, "x")
-			marker = ""
-			numOfChar, _ = strconv.Atoi(splitted[0])
-			iter, _ = strconv.Atoi(splitted[1])
-			buffer += string(char)
-			if numOfChar == 1 {
-				for i := 0; i < iter; i++ {
-					decompressData += buffer
-				}
-				if char == '(' {
-					state = "newMarker"
-				} else {
-					state = "normal"
-				}
-			} else {
-				state = "Decompress"
-			}
-
-		case "Decompress":
-			if len(buffer) == numOfChar-1 {
-				buffer += string(char)
-				for i := 0; i < iter; i++ {
-					decompressData += buffer
-				}
-				if char == '(' {
-					state = "newMarker"
-				} else {
-					state = "normal"
-				}
-			} else {
-				buffer += string(char)
-			}
-		}
-	}
-	fmt.Printf("Q1: Len of decompressed data = %d\n", len(decompressData))
+	fmt.Printf("Q1: Len of decompressed data = %d\n", processMarker(compressData, false))
+	fmt.Printf("Q2: Len of decompressed data = %d\n", processMarker(compressData, true))
 
 	//Elapse time
 	elapsed := time.Since(start)
