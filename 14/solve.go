@@ -13,14 +13,11 @@ var mutex = &sync.Mutex{}
 
 func getHash(i int) string {
 	mutex.Lock()
-	if hashMap[i] != "" {
-		mutex.Unlock()
-		return hashMap[i]
-	} else {
+	if hashMap[i] == "" {
 		hashMap[i] = fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s%d", input, i))))
-		mutex.Unlock()
-		return hashMap[i]
 	}
+	mutex.Unlock()
+	return hashMap[i]
 }
 
 func main() {

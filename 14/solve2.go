@@ -14,10 +14,7 @@ var mutex = &sync.Mutex{}
 
 func getHash(i int) string {
 	mutex.Lock()
-	if hashMap[i] != "" {
-		mutex.Unlock()
-		return hashMap[i]
-	} else {
+	if hashMap[i] == "" {
 		hash_b := md5.Sum([]byte(fmt.Sprintf("%s%d", input, i)))
 		hash := hex.EncodeToString(hash_b[:])
 		for j:=0; j < 2016; j++ {
@@ -25,9 +22,9 @@ func getHash(i int) string {
 			hash = hex.EncodeToString(hash_b[:])
 		}
 		hashMap[i] = hash
-		mutex.Unlock()
-		return hashMap[i]
 	}
+	mutex.Unlock()
+	return hashMap[i]
 }
 
 func main() {
