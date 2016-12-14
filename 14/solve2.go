@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 	"sync"
+	"encoding/hex"
 )
 
 var input = "yjdafjpo"
@@ -17,7 +18,13 @@ func getHash(i int) string {
 		mutex.Unlock()
 		return hashMap[i]
 	} else {
-		hashMap[i] = fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s%d", input, i))))
+		hash_b := md5.Sum([]byte(fmt.Sprintf("%s%d", input, i)))
+		hash := hex.EncodeToString(hash_b[:])
+		for j:=0; j < 2016; j++ {
+			hash_b = md5.Sum([]byte(hash))
+			hash = hex.EncodeToString(hash_b[:])
+		}
+		hashMap[i] = hash
 		mutex.Unlock()
 		return hashMap[i]
 	}
@@ -25,7 +32,7 @@ func getHash(i int) string {
 
 func main() {
 	start := time.Now() //timestamp
-	fmt.Printf("Solution for day 14 GO part 1(go routine experiment) !\n")
+	fmt.Printf("Solution for day 14 GO part 2 (go routine experiment) !\n")
 
 	index := make(chan int)
 	five := make(chan byte)
@@ -71,11 +78,12 @@ func main() {
 			k++
 		}
 		if len(key) == 64 {
-			fmt.Printf("Q1: The 64th key is %d\n", key[63])
+			fmt.Printf("Q2: The 64th key is %d\n", key[63])
 			break
 		}
 		i++
 	}
+
 	//Elapse time
 	elapsed := time.Since(start)
 	fmt.Printf("Execution took %s\n", elapsed)
