@@ -44,7 +44,7 @@ func main() {
 			index <- i
 			h := <-hash
 			//fmt.println("Receive hash from hashgen", h)
-			for j := 0; j < len(h)-2; j++ {
+			for j := 0; j < len(h)-3; j++ {
 				w := h[j : j+3]
 				if w[0] == w[1] && w[1] == w[2] {
 					//fmt.println("find 3ofaKind", string(w))
@@ -70,7 +70,7 @@ func main() {
 			index <- i + k
 			h := <-hash
 			//fmt.println("5ofaKind receive hash", i, h)
-			for j := 0; j < len(h)-4; j++ {
+			for j := 0; j < len(h)-5; j++ {
 				w := h[j : j+5]
 				if w[0] == w[1] && w[1] == w[2] && w[2] == w[3] && w[3] == w[4] && w[4] == c {
 					//fmt.println("find 5ofaKind", string(w))
