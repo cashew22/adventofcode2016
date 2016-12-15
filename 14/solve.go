@@ -3,11 +3,11 @@ package main
 import (
 	"crypto/md5"
 	"fmt"
-	"time"
 	"sync"
+	"time"
 )
 
-var input = "yjdafjpo"
+var input = "zpqevtbw"
 var hashMap map[int]string // lol
 var mutex = &sync.Mutex{}
 
@@ -51,13 +51,14 @@ func main() {
 		i := <-index
 		c := <-five
 		k := 1
-		for k < 1000 {
+		for k < 1001 {
 			find := false
-			h := getHash(i+k)
+			h := getHash(i + k)
 			for j := 0; j < len(h)-4; j++ {
 				w := h[j : j+5]
 				if w[0] == w[1] && w[1] == w[2] && w[2] == w[3] && w[3] == w[4] && w[4] == c {
 					key = append(key, i)
+					fmt.Println(len(key), i, i+k)
 					find = true
 					break
 				}
